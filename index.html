@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Reparaciones | Servicio Técnico Profesional en Paso de los Toros</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        f1blue: '#3F48CC', // Azul exacto del logotipo F1
+                        f1dark: '#1E2470',
+                        f1light: '#EEF2FF'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-white text-slate-800 antialiased selection:bg-[#3F48CC] selection:text-white">
+
+    <!-- Notificación / Modal Personalizado (Reemplazo de alert) -->
+    <div id="custom-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl text-center transform transition-all">
+            <div id="modal-icon" class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-3xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 id="modal-title" class="text-xl font-bold text-slate-900 mb-2">¡Operación Exitosa!</h3>
+            <p id="modal-message" class="text-slate-600 text-sm mb-6">Mensaje descriptivo aquí...</p>
+            <button onclick="closeModal()" class="w-full py-3 px-4 bg-[#3F48CC] hover:bg-[#3239a8] text-white font-semibold rounded-xl transition shadow-lg shadow-[#3F48CC]/25">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <!-- Header & Navegación (Fondo Blanco Limpio) -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <!-- Logotipo oficial -->
+                <div class="flex items-center justify-center group-hover:scale-105 transition">
+                    <img src="logo-f1.png?v=2" alt="Reparaciones F1" class="h-14 w-auto object-contain">
+                </div>
+                <div>
+                    <span class="text-lg font-black tracking-tight text-slate-950 block leading-none">REPARACIONES F1</span>
+                    <span class="text-xs text-[#3F48CC] font-semibold tracking-wide mt-1 block">Paso de los Toros, Uruguay</span>
+                </div>
+            </a>
+            
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <a href="#inicio" class="hover:text-[#3F48CC] transition">Inicio</a>
+                <a href="#servicios" class="hover:text-[#3F48CC] transition">Servicios</a>
+                <a href="#remota" class="hover:text-[#3F48CC] transition flex items-center gap-1.5 text-[#3F48CC]">
+                    <i class="fa-solid fa-laptop-code"></i> Soporte Remoto
+                </a>
+                <a href="#precios" class="hover:text-[#3F48CC] transition">Precios</a>
+                <a href="#ubicacion" class="hover:text-[#3F48CC] transition">Ubicación</a>
+                <a href="#contacto" class="hover:text-[#3F48CC] transition">Contacto</a>
+            </nav>
+
+            <div class="hidden md:flex items-center gap-3">
+                <a href="https://wa.me/59899470007" target="_blank" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
+                </a>
+            </div>
+
+            <!-- Botón Menú Móvil -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-slate-700 hover:text-[#3F48CC] p-2 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 py-5 space-y-3 shadow-lg">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block text-slate-700 hover:text-[#3F48CC] font-semibold py-2">Inicio</a>
+            <a href="#servicios" onclick="toggleMobileMenu()" class="block text-slate-700 hover:text-[#3F48CC] font-semibold py-2">Servicios</a>
+            <a href="#remota" onclick="toggleMobileMenu()" class="block text-[#3F48CC] font-bold py-2">Soporte Remoto</a>
+            <a href="#precios" onclick="toggleMobileMenu()" class="block text-slate-700 hover:text-[#3F48CC] font-semibold py-2">Precios</a>
+            <a href="#ubicacion" onclick="toggleMobileMenu()" class="block text-slate-700 hover:text-[#3F48CC] font-semibold py-2">Ubicación</a>
+            <a href="#contacto" onclick="toggleMobileMenu()" class="block text-slate-700 hover:text-[#3F48CC] font-semibold py-2">Contacto</a>
+            <div class="pt-2">
+                <a href="https://wa.me/59899470007" target="_blank" class="w-full py-3 bg-emerald-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Contactar por WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section (Blanco Luminoso con Acentos Azules) -->
+    <section id="inicio" class="relative overflow-hidden pt-14 pb-20 lg:pt-20 lg:pb-28 bg-gradient-to-b from-slate-50 via-white to-blue-50/40 border-b border-slate-200/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3F48CC]/10 border border-[#3F48CC]/20 text-[#3F48CC] text-xs font-bold tracking-wide uppercase">
+                        <span class="w-2 h-2 rounded-full bg-[#3F48CC] animate-pulse"></span> Sociedad de Acciones Simplificadas (SAS)
+                    </div>
+                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-slate-950 leading-tight">
+                        Tecnología nueva, <span class="text-[#3F48CC]">reparada y productiva.</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0">
+                        Especialistas en mantenimiento, optimización y reparación de computadoras de escritorio, laptops y dispositivos en Paso de los Toros. Soluciones rápidas, económicas y con garantía.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#remota" class="w-full sm:w-auto px-8 py-4 bg-[#3F48CC] hover:bg-[#3239a8] text-white font-bold rounded-2xl shadow-xl shadow-[#3F48CC]/25 transition flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-download"></i> Descargar Soporte Remoto
+                        </a>
+                        <a href="#contacto" class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-2xl transition flex items-center justify-center gap-3 shadow-sm">
+                            <i class="fa-solid fa-calendar-check text-[#3F48CC]"></i> Agendar Servicio
+                        </a>
+                    </div>
+                    
+                    <!-- Socios / Equipo -->
+                    <div class="pt-8 border-t border-slate-200 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-slate-500">
+                        <span class="font-bold text-slate-800">Fundadores:</span>
+                        <span><i class="fa-solid fa-user-gear text-[#3F48CC] mr-1"></i> Anthony Rodriguez</span>
+                        <span><i class="fa-solid fa-user-gear text-[#3F48CC] mr-1"></i> Bruno Amarillo</span>
+                        <span><i class="fa-solid fa-user-gear text-[#3F48CC] mr-1"></i> Randy Soares</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Central con el Logo Oficial -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-md bg-white p-8 rounded-3xl border border-slate-200 shadow-2xl shadow-blue-900/10">
+                        <div class="absolute -top-3.5 right-6 bg-[#3F48CC] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md">
+                            Local Oficial
+                        </div>
+                        <div class="text-center space-y-5">
+                            <!-- Logo oficial -->
+                            <div class="py-4 px-6 bg-white rounded-2xl flex flex-col items-center justify-center">
+                                <img src="logo-f1.png?v=2" alt="Logo Reparaciones F1" class="h-40 w-auto object-contain mb-3">
+                                <span class="text-2xl font-black tracking-tight text-slate-950" style="text-shadow: 0 0 1px #3F48CC;">REPARACIONES F1</span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-500">Sarandí 334, Paso de los Toros, Tacuarembó</p>
+                            
+                            <div class="grid grid-cols-2 gap-3 pt-2 text-left">
+                                <div class="bg-blue-50/70 p-3.5 rounded-xl border border-blue-100">
+                                    <div class="text-[#3F48CC] font-bold text-base">Hardware</div>
+                                    <div class="text-xs text-slate-600">Diagnóstico, armado y piezas</div>
+                                </div>
+                                <div class="bg-blue-50/70 p-3.5 rounded-xl border border-blue-100">
+                                    <div class="text-[#3F48CC] font-bold text-base">Software</div>
+                                    <div class="text-xs text-slate-600">Optimización y virus</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características Principales -->
+    <section id="servicios" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#3F48CC]">Nuestras Soluciones</span>
+                <h2 class="text-3xl font-extrabold text-slate-950 mt-2 mb-4">¿Por qué elegir Reparaciones F1?</h2>
+                <p class="text-slate-600">Ofrecemos soluciones técnicas confiables con un enfoque accesible y de alta calidad para estudiantes, trabajadores y pequeños comercios isabelinos.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl hover:border-[#3F48CC] hover:shadow-xl hover:shadow-blue-900/5 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl mb-4 group-hover:bg-[#3F48CC] group-hover:text-white transition">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Reparaciones Rápidas</h3>
+                    <p class="text-sm text-slate-600">Soluciones ágiles en hardware y software para pantallas rotas, fallas de arranque, virus y rendimiento lento.</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl hover:border-[#3F48CC] hover:shadow-xl hover:shadow-blue-900/5 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl mb-4 group-hover:bg-[#3F48CC] group-hover:text-white transition">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Optimización Total</h3>
+                    <p class="text-sm text-slate-600">Eliminación de archivos basura, temporales y procesos innecesarios para devolver la velocidad de fábrica a tu equipo.</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl hover:border-[#3F48CC] hover:shadow-xl hover:shadow-blue-900/5 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl mb-4 group-hover:bg-[#3F48CC] group-hover:text-white transition">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Precios Económicos</h3>
+                    <p class="text-sm text-slate-600">Presupuestos claros y sin sorpresas. Tarifas justas que evitan gastos innecesarios en equipos nuevos.</p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200/80 p-6 rounded-2xl hover:border-[#3F48CC] hover:shadow-xl hover:shadow-blue-900/5 transition group">
+                    <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl mb-4 group-hover:bg-[#3F48CC] group-hover:text-white transition">
+                        <i class="fa-solid fa-recycle"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Economía Circular</h3>
+                    <p class="text-sm text-slate-600">Extendemos la vida útil de tus dispositivos, reduciendo los residuos electrónicos y apostando por la sustentabilidad.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Soporte Remoto (Mezcla Blanco y Azul Vibrante) -->
+    <section id="remota" class="py-20 bg-slate-50 border-t border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-br from-[#3F48CC] to-[#242B8A] rounded-3xl p-8 lg:p-12 shadow-2xl shadow-blue-900/20 relative overflow-hidden text-white">
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 border border-white/25 text-white text-xs font-semibold">
+                            <i class="fa-solid fa-shield-halved"></i> Conexión Segura y Encriptada
+                        </div>
+                        <h2 class="text-3xl lg:text-4xl font-extrabold text-white">
+                            Descarga nuestro Programa de Reparación Remota
+                        </h2>
+                        <p class="text-blue-100">
+                            ¿Estás lejos del local o necesitas asistencia inmediata con tu software? Descargá <span class="text-white font-bold underline decoration-blue-300">TeamViewer QuickSupport</span>, el programa oficial que usamos. Permite a nuestros técnicos diagnosticar y solucionar problemas de sistema operativo, virus o configuración directamente desde nuestro taller.
+                        </p>
+                        
+                        <div class="space-y-3 text-sm text-blue-50">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-blue-200"></i>
+                                <span>Acceso temporal controlado con ID y contraseña de sesión.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-blue-200"></i>
+                                <span>Ideal para eliminación de virus, optimización y configuración de programas.</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-blue-200"></i>
+                                <span>Compatible con Windows 10 y 11 (64 bits).</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex flex-wrap gap-4">
+                            <a href="TeamViewer_Setup_x64.exe" download="TeamViewer_Setup_x64.exe" onclick="showDownloadModal()" class="px-8 py-4 bg-white hover:bg-blue-50 text-[#3F48CC] font-extrabold rounded-2xl shadow-lg transition flex items-center gap-3">
+                                <i class="fa-solid fa-cloud-arrow-down text-xl"></i> Descargar TeamViewer (.exe)
+                                <span class="text-xs font-bold bg-[#3F48CC]/10 px-2 py-1 rounded-lg">83 MB</span>
+                            </a>
+                            <a href="https://wa.me/59899470007?text=Hola,%20necesito%20soporte%20remoto%20y%20ya%20tengo%20el%20programa%20abierto" target="_blank" class="px-6 py-4 bg-[#242B8A]/80 hover:bg-[#1a1f66] border border-white/20 text-white font-semibold rounded-2xl transition flex items-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-emerald-400 text-xl"></i> Notificar al Técnico
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="w-full bg-white text-slate-900 p-6 rounded-2xl space-y-4 shadow-xl">
+                            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                                <span class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-desktop text-[#3F48CC]"></i> TeamViewer QuickSupport
+                                </span>
+                                <span class="text-xs bg-emerald-100 text-emerald-700 font-bold px-2.5 py-0.5 rounded-full">Listo</span>
+                            </div>
+                            <div class="space-y-2.5 text-xs text-slate-500">
+                                <div class="flex justify-between">
+                                    <span>Programa:</span>
+                                    <span class="text-slate-900 font-semibold">Oficial de TeamViewer</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Tamaño:</span>
+                                    <span class="text-slate-900 font-semibold">83 MB</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Seguridad:</span>
+                                    <span class="text-emerald-600 font-bold">Firma oficial verificada</span>
+                                </div>
+                            </div>
+                            <div class="p-3.5 bg-blue-50 border border-blue-100 rounded-xl text-xs text-[#3F48CC] font-medium">
+                                <i class="fa-solid fa-info-circle mr-1"></i> Una vez instalado, abrí TeamViewer y pasanos el <strong>ID</strong> y la <strong>contraseña</strong> que aparecen en pantalla por WhatsApp o llamada.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Servicios y Precios -->
+    <section id="precios" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#3F48CC]">Planes y Tarifas</span>
+                <h2 class="text-3xl font-extrabold text-slate-950 mt-2 mb-4">Nuestros Precios y Servicios</h2>
+                <p class="text-slate-600">Tarifas transparentes, competitivas y adaptadas para particulares y pequeños comercios.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Plan 1 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between relative hover:border-[#3F48CC] hover:shadow-xl transition">
+                    <div>
+                        <div class="text-sm font-bold text-[#3F48CC] mb-2">Servicio Estándar</div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Optimización y Reparación</h3>
+                        <p class="text-slate-600 text-sm mb-6">Limpieza de virus, optimización de sistema, eliminación de archivos basura y corrección de errores comunes.</p>
+                        <div class="text-4xl font-black text-slate-950 mb-6">$1.100 <span class="text-xs font-medium text-slate-500">UYU</span></div>
+                        <ul class="space-y-3 text-sm text-slate-600 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Diagnóstico completo</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Mejora de velocidad</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Garantía de servicio</li>
+                        </ul>
+                    </div>
+                    <a href="#contacto" class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-xl text-center transition">Seleccionar</a>
+                </div>
+
+                <!-- Plan 2 (Destacado Azul) -->
+                <div class="bg-blue-50/40 border-2 border-[#3F48CC] rounded-3xl p-8 flex flex-col justify-between relative shadow-xl shadow-blue-900/10">
+                    <div class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-[#3F48CC] text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider shadow">
+                        Más Popular
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-[#3F48CC] mb-2">Membresía Mensual</div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Mantenimiento Preventivo</h3>
+                        <p class="text-slate-600 text-sm mb-6">Ideal para pequeños comercios y oficinas que dependen de sus equipos diariamente.</p>
+                        <div class="text-4xl font-black text-slate-950 mb-6">$950 <span class="text-xs font-medium text-slate-500">UYU / mes</span></div>
+                        <ul class="space-y-3 text-sm text-slate-700 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Revisiones periódicas</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Soporte prioritario</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Limpieza de software</li>
+                        </ul>
+                    </div>
+                    <a href="#contacto" class="w-full py-3.5 bg-[#3F48CC] hover:bg-[#3239a8] text-white font-bold rounded-xl text-center transition shadow-lg shadow-[#3F48CC]/25">Contratar Membresía</a>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between relative hover:border-[#3F48CC] hover:shadow-xl transition">
+                    <div>
+                        <div class="text-sm font-bold text-[#3F48CC] mb-2">Ventas y Equipos</div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Compra de PC Completa</h3>
+                        <p class="text-slate-600 text-sm mb-6">Armado y venta de equipos informáticos nuevos y reacondicionados listos para usar.</p>
+                        <div class="text-3xl font-black text-emerald-600 mb-6">20% OFF <span class="text-xs font-medium text-slate-500">en servicios</span></div>
+                        <ul class="space-y-3 text-sm text-slate-600 mb-8">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Componentes garantizados</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Descuento en mantenimiento</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-[#3F48CC]"></i> Asesoramiento personalizado</li>
+                        </ul>
+                    </div>
+                    <a href="#contacto" class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-900 font-bold rounded-xl text-center transition">Consultar Stock</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ubicación y Horarios -->
+    <section id="ubicacion" class="py-20 bg-slate-50 border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold uppercase tracking-wider text-[#3F48CC]">Visítanos</span>
+                <h2 class="text-3xl font-extrabold text-slate-950 mt-2 mb-4">Ubicación de nuestro Local</h2>
+                <p class="text-slate-600">Ven a visitarnos a nuestro local en Paso de los Toros. Contamos con un espacio equipado para reparaciones y atención personalizada.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Información de Local -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-white border border-slate-200 p-8 rounded-3xl space-y-6 shadow-sm">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Dirección del Local</h3>
+                                <p class="text-slate-700 font-medium text-sm">Sarandí 334</p>
+                                <p class="text-slate-500 text-xs">Paso de los Toros, Tacuarembó, Uruguay</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Horarios de Atención</h3>
+                                <p class="text-slate-700 text-sm">Lunes a Viernes: 9:00 a 17:00</p>
+                                <p class="text-slate-700 text-sm">Sábados: 9:00 a 13:00</p>
+                                <p class="text-slate-400 text-xs">Domingos: Descanso</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Espacio Comercial</h3>
+                                <p class="text-slate-700 text-sm">40m² dedicados al servicio técnico</p>
+                                <p class="text-slate-500 text-xs">Atendido por sus 3 socios fundadores</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mapa Simulado / Tarjeta Interactiva de Ubicación -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 h-[400px] flex flex-col justify-between relative overflow-hidden shadow-sm">
+                        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#3F48CC_1.5px,transparent_1.5px)] [background-size:18px_18px]"></div>
+                        <div class="relative z-10 flex flex-wrap justify-between items-center gap-2">
+                            <span class="bg-white border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 shadow-sm">
+                                <i class="fa-solid fa-map-pin text-[#3F48CC] mr-1"></i> Sarandí 334, Paso de los Toros
+                            </span>
+                            <a href="https://maps.google.com/?q=Sarandi+334+Paso+de+los+Toros" target="_blank" class="px-4 py-2 bg-[#3F48CC] hover:bg-[#3239a8] text-white text-xs font-bold rounded-xl transition shadow">
+                                Abrir en Google Maps <i class="fa-solid fa-external-link-alt ml-1"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="relative z-10 text-center my-auto space-y-3">
+                            <div class="w-16 h-16 mx-auto rounded-full bg-[#3F48CC] text-white flex items-center justify-center text-3xl shadow-lg shadow-[#3F48CC]/30 animate-bounce">
+                                <i class="fa-solid fa-computer"></i>
+                            </div>
+                            <h4 class="text-xl font-black text-slate-950">REPARACIONES F1</h4>
+                            <p class="text-sm text-slate-600 max-w-sm mx-auto">Te esperamos en nuestro local para cualquier consulta, diagnóstico o entrega de equipos.</p>
+                        </div>
+
+                        <div class="relative z-10 text-center text-xs font-semibold text-slate-400">
+                            Ciudad de Paso de los Toros - Tacuarembó
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Soporte al Cliente y Formulario de Contacto -->
+    <section id="contacto" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#3F48CC]/10 border border-[#3F48CC]/20 text-[#3F48CC] text-xs font-bold">
+                        Soporte al Cliente
+                    </div>
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-slate-950">
+                        ¿Tienes dudas o necesitas asistencia?
+                    </h2>
+                    <p class="text-slate-600">
+                        Ponte en contacto con nuestro equipo de administración y soporte técnico. Respondemos con agilidad a través de WhatsApp o correo electrónico.
+                    </p>
+                    
+                    <div class="space-y-4 pt-4">
+                        <div class="flex items-center gap-4 text-slate-700">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#3F48CC]">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-500">Teléfono / WhatsApp</div>
+                                <a href="https://wa.me/59899470007" target="_blank" rel="noopener" class="font-bold text-slate-900 hover:text-[#3F48CC] transition">+598 99 470 007</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 text-slate-700">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#3F48CC]">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-xs text-slate-500">Correo Electrónico</div>
+                                <a href="mailto:brunoamarillos59@gmail.com" class="font-bold text-slate-900 hover:text-[#3F48CC] transition break-all">brunoamarillos59@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6">
+                    <form onsubmit="handleContact(event)" class="bg-slate-50 border border-slate-200 p-8 rounded-3xl space-y-4 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Envíanos un Mensaje</h3>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Tu Nombre</label>
+                            <input type="text" id="nombre" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-[#3F48CC] transition" placeholder="Juan Pérez">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Correo o Teléfono</label>
+                            <input type="text" id="contacto_medio" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-[#3F48CC] transition" placeholder="tucorreo@email.com o WhatsApp">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Medio de actualización preferido</label>
+                            <select id="medio_preferido" class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-[#3F48CC] transition">
+                                <option value="WhatsApp">A través de WhatsApp</option>
+                                <option value="Correo">Correo electrónico</option>
+                                <option value="Llamada">Llamada telefónica</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Descripción del Problema</label>
+                            <textarea id="mensaje" rows="4" required class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-sm focus:outline-none focus:border-[#3F48CC] transition" placeholder="Mi computadora está lenta / no enciende..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-[#3F48CC] hover:bg-[#3239a8] text-white font-bold rounded-xl transition shadow-lg shadow-[#3F48CC]/25">
+                            Enviar Solicitud
+                        </button>
+                        <p class="text-[11px] text-center text-slate-500">
+                            Se abrirá WhatsApp o tu correo con el mensaje ya escrito para que lo envíes.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-300 py-12 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="space-y-4 md:col-span-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-xl p-1.5 flex items-center justify-center">
+                            <img src="logo-f1.png?v=2" alt="Reparaciones F1" class="w-full h-full object-contain">
+                        </div>
+                        <span class="text-lg font-black text-white">REPARACIONES F1 (SAS)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 max-w-sm">
+                        Tecnología nueva, reparada y productiva. Empresa establecida en Paso de los Toros dedicada al soporte técnico, mantenimiento y optimización informática.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Enlaces Rápidos</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="#inicio" class="hover:text-white transition">Inicio</a></li>
+                        <li><a href="#servicios" class="hover:text-white transition">Servicios</a></li>
+                        <li><a href="#remota" class="hover:text-white transition">Soporte Remoto</a></li>
+                        <li><a href="#ubicacion" class="hover:text-white transition">Ubicación</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-xs uppercase tracking-wider mb-3">Socios Fundadores</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li>Anthony Rodriguez Sanchez</li>
+                        <li>Bruno Amarillo Seballes</li>
+                        <li>Randy Soares De lima</li>
+                        <li class="pt-2 text-blue-400 font-semibold">Paso de los Toros, Uruguay</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 Reparaciones F1. Todos los derechos reservados.</p>
+                <p class="mt-2 sm:mt-0">Sociedad de Acciones Simplificadas (SAS)</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript interactivo -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            menu.classList.toggle('hidden');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
+        }
+
+        function showModal(title, message, isSuccess = true) {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalIcon = document.getElementById('modal-icon');
+
+            modalTitle.innerText = title;
+            modalMessage.innerText = message;
+
+            if (isSuccess) {
+                modalIcon.className = "w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl";
+                modalIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else {
+                modalIcon.className = "w-16 h-16 mx-auto mb-4 rounded-full bg-[#3F48CC]/10 text-[#3F48CC] flex items-center justify-center text-3xl";
+                modalIcon.innerHTML = '<i class="fa-solid fa-download"></i>';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+        }
+
+        function showDownloadModal() {
+            showModal(
+                "Descarga Iniciada", 
+                "Se está descargando 'TeamViewer_Setup_x64.exe' (83 MB). Ejecutá el instalador, abrí TeamViewer y envianos el ID y la contraseña que aparecen en pantalla por WhatsApp para conectarnos.", 
+                false
+            );
+        }
+
+        const F1_WHATSAPP = '59899470007';
+        const F1_EMAIL = 'brunoamarillos59@gmail.com';
+
+        function handleContact(event) {
+            event.preventDefault();
+
+            const nombre = document.getElementById('nombre').value.trim();
+            const medioContacto = document.getElementById('contacto_medio').value.trim();
+            const preferido = document.getElementById('medio_preferido').value;
+            const mensaje = document.getElementById('mensaje').value.trim();
+
+            const texto = `Hola, soy ${nombre}.\n\nConsulta: ${mensaje}\n\nMi contacto: ${medioContacto}\nPrefiero que me respondan por: ${preferido}.`;
+
+            if (preferido === 'Correo') {
+                window.location.href = `mailto:${F1_EMAIL}?subject=${encodeURIComponent('Consulta web - ' + nombre)}&body=${encodeURIComponent(texto)}`;
+            } else {
+                const nota = preferido === 'Llamada' ? '\n\n(Me gustaría recibir una llamada telefónica)' : '';
+                window.open(`https://wa.me/${F1_WHATSAPP}?text=${encodeURIComponent(texto + nota)}`, '_blank');
+            }
+
+            showModal(
+                "¡Solicitud Lista!",
+                `Gracias ${nombre}. Abrimos ${preferido === 'Correo' ? 'tu correo' : 'WhatsApp'} con el mensaje preparado; solo tenés que enviarlo. Si no se abrió, escribinos a ${F1_EMAIL}.`
+            );
+
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
